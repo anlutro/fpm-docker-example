@@ -25,5 +25,5 @@ CMD hello-world
 
 # run the application
 FROM scratch AS prod
-COPY --from=build /src/hello-world /bin/
+COPY --from=build /go/bin/hello-world /bin/
 CMD ["/bin/hello-world"]
