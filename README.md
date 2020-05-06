@@ -11,17 +11,15 @@ It's not uncommon to build and run your application in Docker these days, and we
 
 ## The application
 
-In this example we're just using a hello world program written in Go, but the general concept is applicable to all programming languages.
+On this branch, we're writing a simple Python CLI application. We create a virtualenv in the build stage, and copy that virtualenv into both our packaging and production stages.
 
-For any compiled language, just make sure the binary and any required shared libraries are available. For Java you'll want to specify any JVM implementation as a dependency of your package.
-
-For a scripted language, let's use Python as an example. You first want to define the python version as a dependency of your package, because you do need the runtime to be present. Then you just need to make sure that all the code + dependencies are available. The easiest way to do this is to create a virtualenv, install your app + dependencies into it, then include the whole virtualenv in the package itself. A good path for the virtualenv would be `/opt/myapp`.
+Our dummy application has one dependency, `psycopg2`, just to prove how you can add dependencies for packaging and multiple versions of Python.
 
 
 ## Scripts
 
-`run.sh` will just compile and run the application in Docker. No packaging involved here, just checking that the application itself works.
+`build.sh` will build or download wheels of the application itself, copy the wheels into a packaging image and then build the packages by invoking `fpm.sh` inside the Docker build process.
 
-`build.sh` will compile the application, copy the compiled application into a packaging image and then build the packages by invoking `fpm.sh` inside the Docker build process.
+`run.sh` will jus run the application in Docker. No packaging involved here (though we do re-use the build logic as well as the method of installing the virtualenv with dependencies), just checking that the application itself works.
 
-`test.sh` will run debian and centos Docker images, install the packages that have been built, and check that the application works as expected.
+`test.sh` will run Debian and CentOS Docker images, install the packages that have been built, and check that the application works as expected.
