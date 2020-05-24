@@ -10,8 +10,8 @@ FROM python AS build
 # constraints.txt, just like with `pip install`.
 COPY setup.py /project/setup.py
 RUN for pyver in 36 37 38; do \
-		pip download /project --only-binary=:all: --python-version=$pyver -d /wheels/cpython-$pyver; \
-	done
+        pip download /project --only-binary=:all: --python-version=$pyver -d /wheels/cpython-$pyver; \
+    done
 # build wheel for the project itself
 COPY hello /project/hello
 RUN pip wheel /project --no-deps -w /wheels

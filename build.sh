@@ -4,8 +4,8 @@ id=hello-world-pkg
 img=tmp/$id
 
 cleanup() {
-	echo "cleanup: removing docker container ..."
-	docker rm -f $id || true
+    echo "cleanup: removing docker container ..."
+    docker rm -f $id || true
 }
 trap cleanup EXIT
 

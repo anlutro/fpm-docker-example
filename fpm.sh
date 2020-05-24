@@ -3,13 +3,13 @@ set -eu
 
 out_dir=./dist
 shared_args="
-	--verbose
-	--force
-	--package=$out_dir
-	--name=hello-world
-	--input-type=dir
-	--after-install=install-venv.sh
-	/opt/hello
+    --verbose
+    --force
+    --package=$out_dir
+    --name=hello-world
+    --input-type=dir
+    --after-install=install-venv.sh
+    /opt/hello
 "
 
 mkdir -p $out_dir
