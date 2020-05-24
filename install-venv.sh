@@ -4,8 +4,13 @@ set -eu
 : ${VIRTUAL_ENV:=/opt/hello}
 : ${WHEELS_PATH:=$VIRTUAL_ENV/wheels}
 
-py_ver_tag=$(python3 -c 'import sys; print(sys.implementation.cache_tag)')
-python3 -m venv --upgrade $VIRTUAL_ENV
+# note that this depends on the system "python3" being the correct version.
+# you will need to change this if your application needs a python version
+# more recent than what the distro provides.
+: ${PYTHON:=python3}
+
+py_ver_tag=$($PYTHON -c 'import sys; print(sys.implementation.cache_tag)')
+$PYTHON -m venv --upgrade $VIRTUAL_ENV
 $VIRTUAL_ENV/bin/pip install --isolated --no-index \
     $WHEELS_PATH/*.whl \
     $WHEELS_PATH/$py_ver_tag/*.whl

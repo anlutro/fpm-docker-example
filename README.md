@@ -11,15 +11,23 @@ It's not uncommon to build and run your application in Docker these days, and we
 
 ## The application
 
-On this branch, we're writing a simple Python CLI application. We create a virtualenv in the build stage, and copy that virtualenv into both our packaging and production stages.
+On this branch, we're writing a simple Python CLI application. The end package will create a virtualenv with the application and its dependencies installed.
 
-Our dummy application has one dependency, `psycopg2`, just to prove how you can add dependencies for packaging and multiple versions of Python.
+While it's possible to just create a virtualenv, install everything, and ship that as the package, this becomes difficult if you want to support more than one version of Python - you'll have to repeat the build stage for every Python version you want to support because you're likely to have binary dependencies that only work with one specific Python runtime.
+
+Our alternate approach builds a wheel for the application and downloads wheels for dependencies, and installs these wheels when the package is installed.
+
+Our dummy application has a few dependencies (`psycopg2` and `requests`) just to prove how you can add dependencies for packaging and multiple versions of Python.
 
 
 ## Scripts
 
-`build.sh` will build or download wheels of the application itself, copy the wheels into a packaging image and then build the packages by invoking `fpm.sh` inside the Docker build process.
+`run.sh` will just run the application in Docker. No packaging involved here (though we do re-use the build logic as well as the method of installing the virtualenv with dependencies), just checking that the application itself works.
 
-`run.sh` will jus run the application in Docker. No packaging involved here (though we do re-use the build logic as well as the method of installing the virtualenv with dependencies), just checking that the application itself works.
+`build.sh` will use Docker to build the application and its packages, most of which steps can be traced in the Dockerfile. Some of them have been extracted into shell scripts for readability:
+
+- `download-deps.sh` downloads wheels of packages that our application depends on for all supported versions of Python.
+- `install-venv.sh` installs a virtualenv from the wheels built and downloaded in the earlier steps.
+- `fpm.sh` runs FPM to build the actual deb/rpm packages.
 
 `test.sh` will run Debian and CentOS Docker images, install the packages that have been built, and check that the application works as expected.

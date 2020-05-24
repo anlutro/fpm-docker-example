@@ -1,4 +1,4 @@
-import psycopg2  # just to prove it works
+import psycopg2, requests  # just to prove it works
 
 
 def main():
